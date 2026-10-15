@@ -4,7 +4,7 @@
 
 #include "Containers/Export.h"
 #include "Containers/ExportContainer.h"
-#include "AssetRegistry/AssetRegistryModule.h"
+#include "AssetRegistryModule.h"
 #include "Importers/Constructor/Asset.h"
 #include "Importers/Constructor/ImportIssues.h"
 #include "Importers/Constructor/Types.h"
@@ -30,7 +30,6 @@
 #include "GameFramework/WorldSettings.h"
 #include "Engine/LODActor.h"
 #include "Engine/HLODProxy.h"
-#include "HLOD/HLODProxyDesc.h"
 #include "HierarchicalLOD.h"
 
 /* [4.26] 	4.26 doesn't find the Importer header on it's own.
@@ -242,7 +241,7 @@ UWorld* FLevelRead::LevelFor(UPackage* Package) const {
 	#if !UE4_26
 	/* Named for the asset, and not rooted: a rooted world is still standing when its own level is opened */
 	UWorld* Made = UWorld::CreateWorld(EWorldType::Inactive, false, FName(*FPackageName::GetShortName(Package)),
-		Package, /* bAddToRoot */ false, ERHIFeatureLevel::Num, &Values);
+		Package, /* bAddToRoot */ false, ERHIFeatureLevel::Num);
 	#else
 	UWorld* Made = UWorld::CreateWorld(EWorldType::Inactive, false, FName(*FPackageName::GetShortName(Package)),
 		Package, /* bAddToRoot */ false, ERHIFeatureLevel::Num);
@@ -341,7 +340,7 @@ void FLevelRead::ReadHLODSetup(UWorld* World, const TArray<ALODActor*>& Actors) 
 	/* [4.26] 	Under the 4.26.2 engine, we don't have access to IsEmpty on a TArray.
 	 *			Getting Max == 0 *should* return the same functionality. */
 	#if !UE4_26
-	if (Settings == nullptr || Actors.IsEmpty()) return;
+	if (Settings == nullptr || Actors.Num() == 0) return;
 	#else
 	if (Settings == nullptr || Actors.Max() == 0) return;
 	#endif
@@ -382,7 +381,7 @@ void FLevelRead::ReadHLODs(UWorld* World, const TArray<ALODActor*>& Actors, FRLe
 	/* [4.26] 	Under the 4.26.2 engine, we don't have access to IsEmpty on a TArray.
 	 *			Getting Max == 0 *should* return the same functionality. */
 	#if !UE4_26
-	if (World == nullptr || Actors.IsEmpty()) return;
+	if (World == nullptr || Actors.Num() == 0) return;
 	#else
 	if (World == nullptr || Actors.Max() == 0) return;
 	#endif
@@ -398,11 +397,6 @@ void FLevelRead::ReadHLODs(UWorld* World, const TArray<ALODActor*>& Actors, FRLe
 	for (UHLODProxy* Proxy : Proxies) {
 		Proxy->SetMap(World);
 		Proxy->MarkPackageDirty();
-	}
-
-	/* Kept in the proxy, as this project is set up: the editor remakes each actor from its description, which the cook drops */
-	if (!GetDefault<UHierarchicalLODSettings>()->bSaveLODActorsToHLODPackages) {
-		return;
 	}
 
 	/* Both kept to themselves, so both are reached the way everything else here is reached */
@@ -522,8 +516,6 @@ void FLevelRead::ReadHLODs(UWorld* World, const TArray<ALODActor*>& Actors, FRLe
 			continue;
 		}
 
-		Proxy->UpdateHLODDescs(World->PersistentLevel);
-
 		if (UPackage* Written = Proxy->GetOutermost(); Written != nullptr && GetSettings()->AssetSettings.SaveAssets) {
 			SavePackage(Written);
 		}
@@ -536,7 +528,7 @@ void FLevelRead::ReadHLODs(UWorld* World, const TArray<ALODActor*>& Actors, FRLe
 void FLevelRead::ReadSubLevels(const TArray<FString>& Named, FRLevelReadResult& Result) const {
 	for (const FString& Package : Named) {
 		/* Already here, so it is left alone, which is also what stops a level naming the one that named it */
-		if (PackageHoldsAsset(Package)) continue;
+		if (FPackageName::DoesPackageExist(Package)) continue;
 
 		/* Asked for in the game's own spelling, which is the only one Cloud answers to */
 		if (TToolImportFromPath::Import(ToCloudPackagePath(Package))) {
@@ -726,7 +718,7 @@ FRLevelReadResult FLevelRead::Read(const TArray<TSharedPtr<FJsonValue>>& Exports
 		FActorSpawnParameters Named;
 
 		Named.Name = Export->GetName();
-		Named.NameMode = FActorSpawnParameters::ESpawnActorNameMode::Requested;
+		Named.bNoFail = true;
 
 		AActor* Actor = World->SpawnActor<AActor>(ActorClass, Named);
 
@@ -848,7 +840,7 @@ FRLevelReadResult FLevelRead::Read(const TArray<TSharedPtr<FJsonValue>>& Exports
 	/* [4.26] 	Under the 4.26.2 engine, we don't have access to IsEmpty on a TArray.
 	 *			Getting Max == 0 *should* return the same functionality. */
 	#if !UE4_26
-	if (!SubLevels.IsEmpty()) {
+	if (!SubLevels.Num() == 0) {
 	#else
 	if (SubLevels.Max() != 0) {
 	#endif
