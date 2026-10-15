@@ -282,7 +282,7 @@ void IStaticMeshImporter::BuildCollisionAndSockets(UStaticMesh* StaticMesh) {
 
 	for (const FUObjectExport* Export : Container->Exports) {
 		if (UStaticMeshSocket* Socket = Cast<UStaticMeshSocket>(Export->Object)) {
-			StaticMesh->AddSocket(Socket);
+			StaticMesh->Sockets.Add(Socket);
 		}
 	}
 
@@ -331,7 +331,7 @@ bool IStaticMeshImporter::BuildLod(UStaticMesh* StaticMesh, const FUObjectJsonVa
 		FirstColoredLod = LodIndex;
 	}
 
-	while (StaticMesh->GetNumSourceModels() <= LodIndex) {
+	while (StaticMesh->SourceModels.Num() <= LodIndex) {
 		StaticMesh->AddSourceModel();
 	}
 
@@ -442,7 +442,7 @@ bool IStaticMeshImporter::BuildLod(UStaticMesh* StaticMesh, const FUObjectJsonVa
 
 	if (BuiltTriangles == 0) return false;
 
-	FStaticMeshSourceModel& SourceModel = StaticMesh->GetSourceModel(LodIndex);
+	FStaticMeshSourceModel& SourceModel = StaticMesh->SourceModels[LodIndex];
 
 	SourceModel.BuildSettings.bRecomputeNormals = false;
 	SourceModel.BuildSettings.bRecomputeTangents = false;
@@ -462,11 +462,11 @@ bool IStaticMeshImporter::BuildLod(UStaticMesh* StaticMesh, const FUObjectJsonVa
 		const TArray<FUObjectJsonValueExport> ExportSections = ExportLods[SourceLod].GetArray(TEXT("Sections"));
 
 		for (int32 SectionIndex = 0; SectionIndex < ExportSections.Num(); ++SectionIndex) {
-			FMeshSectionInfo Info = StaticMesh->GetSectionInfoMap().Get(LodIndex, SectionIndex);
+			FMeshSectionInfo Info = StaticMesh->SectionInfoMap.Get(LodIndex, SectionIndex);
 
 			GetPropertySerializer()->DeserializeStruct(FMeshSectionInfo::StaticStruct(), ExportSections[SectionIndex].JsonObject.ToSharedRef(), &Info);
 
-			StaticMesh->GetSectionInfoMap().Set(LodIndex, SectionIndex, Info);
+			StaticMesh->SectionInfoMap.Set(LodIndex, SectionIndex, Info);
 		}
 	}
 
