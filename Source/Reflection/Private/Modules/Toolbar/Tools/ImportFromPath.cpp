@@ -133,7 +133,7 @@ bool TToolImportFromPath::Import(const FString& InPath, const TSet<FString>& All
 	));
 
 	const TSharedPtr<FJsonObject> Response = Cloud::Export::GetRawBlocking(PackagePath);
-	if (Response == nullptr || !Response->HasField(TEXT("exports"))) {
+	if (!Response.IsValid() || !Response->HasField(TEXT("exports"))) {
 		ReportUnreachable(EImportIssue::MissingAsset, TEXT("Cloud has nothing at this path"));
 
 		return false;
