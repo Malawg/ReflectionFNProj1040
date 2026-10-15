@@ -215,11 +215,6 @@ public class Reflection : ModuleRules {
 			"StaticMeshDescription",
 #endif
 
-#if UE_4_23_OR_LATER
-			/* PhysicsCore was carved out of Engine in 4.23 */
-			"PhysicsCore",
-#endif
-
 #if UE_4_24_OR_LATER
 			/* FKismetBytecodeDisassembler lived in UnrealEd until 4.24 gave it a module of its own */
 			"ScriptDisassembler",
