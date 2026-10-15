@@ -263,11 +263,11 @@ struct REFLECTION_API FUObjectExport : FUObjectJsonValueExport {
 	}
 
 	bool IsJsonAndObjectValid() const {
-		return JsonObject != nullptr && Object != nullptr;
+		return JsonObject.IsValid() && Object != nullptr;
 	}
 
 	bool IsJsonValid() const {
-		return JsonObject != nullptr && !bEmpty;
+		return JsonObject.IsValid() && !bEmpty;
 	}
 
 	bool IsJsonInvalid() const {

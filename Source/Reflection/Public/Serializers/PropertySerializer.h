@@ -116,7 +116,7 @@ inline bool PassthroughPropertyHandler(FProperty* Property, const FString& Prope
 			TSharedPtr<FJsonValue> ArrayJsonElement = ArrayElements[ArrayIndex];
 
 			/* Check to see if it's null */
-			if (ArrayJsonElement == nullptr || ArrayJsonElement->IsNull()) continue;
+			if (!ArrayJsonElement.IsValid() || ArrayJsonElement->IsNull()) continue;
 			
 			const TSharedRef<FJsonValue> ArrayJsonValue = ArrayJsonElement.ToSharedRef();
 
