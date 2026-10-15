@@ -109,7 +109,7 @@ UPackage* FAssetUtilities::CreateAssetPackage(const FString& Name, const FString
 				ModifiablePath.Split("/", nullptr, &PluginName, ESearchCase::IgnoreCase, ESearchDir::FromStart);
 				PluginName.Split("/", &PluginName, nullptr, ESearchCase::IgnoreCase, ESearchDir::FromStart);
 
-				if (GetPlugin(PluginName) == nullptr) {
+				if (!GetPlugin(PluginName).IsValid()) {
 					CreatePlugin(PluginName);
 				}
 			}
@@ -122,7 +122,7 @@ UPackage* FAssetUtilities::CreateAssetPackage(const FString& Name, const FString
 				ModifiablePath.Split("/", nullptr, &PluginName, ESearchCase::IgnoreCase, ESearchDir::FromStart);
 				PluginName.Split("/", &PluginName, nullptr, ESearchCase::IgnoreCase, ESearchDir::FromStart);
 
-				if (GetPlugin(PluginName) == nullptr) {
+				if (!GetPlugin(PluginName).IsValid()) {
 					CreatePlugin(PluginName);
 				}
 			}
@@ -133,7 +133,7 @@ UPackage* FAssetUtilities::CreateAssetPackage(const FString& Name, const FString
 			RootName.Split("/", &RootName, nullptr, ESearchCase::IgnoreCase, ESearchDir::FromStart);
 		}
 
-		if (RootName != "Game" && RootName != "Engine" && GetPlugin(RootName) == nullptr) {
+		if (RootName != "Game" && RootName != "Engine" && !GetPlugin(RootName).IsValid()) {
 			CreatePlugin(RootName);
 		}
 

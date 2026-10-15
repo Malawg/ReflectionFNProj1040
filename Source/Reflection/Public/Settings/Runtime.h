@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/EngineTypes.h"
 
 struct FRCloudProfile {
 	/* What the profile is called in Cloud, which is whatever the user named it */

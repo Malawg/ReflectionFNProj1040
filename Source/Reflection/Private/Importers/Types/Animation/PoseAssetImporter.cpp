@@ -512,7 +512,7 @@ TMap<FName, FTransform> IPoseAssetImporter::GetCookedReferencePose() const {
 	));
 
 	const TSharedPtr<FJsonObject> Response = Cloud::Export::GetRawBlocking(SkeletonPath);
-	if (Response == nullptr || !Response->HasField(TEXT("exports"))) {
+	if (!Response.IsValid() || !Response->HasField(TEXT("exports"))) {
 		UE_LOG(LogReflection, Warning, TEXT("\"%s\" could not read \"%s\" from Cloud, falling back to the skeleton in the project"), *GetAssetName(), *SkeletonPath);
 
 		return ReferencePose;

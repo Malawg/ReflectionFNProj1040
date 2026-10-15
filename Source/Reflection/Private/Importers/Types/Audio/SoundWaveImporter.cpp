@@ -29,7 +29,7 @@ namespace {
 			}
 		});
 
-		if (Response == nullptr) {
+		if (!Response.IsValid()) {
 			return false;
 		}
 

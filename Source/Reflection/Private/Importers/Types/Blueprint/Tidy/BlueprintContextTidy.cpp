@@ -141,7 +141,7 @@ struct FBlueprintContextTidy final : FGraphTidy {
 
 				if (Kind == nullptr) continue;
 
-				FObjectProperty* Says = FindFProperty<FObjectProperty>(Kind, TEXT("CustomClass"));
+				UObjectProperty* Says = FindField<UObjectProperty>(Kind, TEXT("CustomClass"));
 
 				if (Says == nullptr) continue;
 
@@ -156,13 +156,13 @@ struct FBlueprintContextTidy final : FGraphTidy {
 				Made->NodePosY = Casting->NodePosY;
 
 				/* Said before the pins are made, since the pin it hands out is of whatever this says */
-				Says->SetObjectPropertyValue_InContainer(Made, Wanted);
+				Says->SetPropertyValue_InContainer(Made, Wanted);
 
 				Made->AllocateDefaultPins();
 
 				/* And read back after, since a node that will not hold the class clears it, and
 				 * what is left then says less than the call it was going to replace */
-				if (Says->GetObjectPropertyValue_InContainer(Made) != Wanted) {
+				if (Says->GetPropertyValue_InContainer(Made) != Wanted) {
 					Graph->RemoveNode(Made);
 
 					UE_LOG(LogReflectionTidyContext, Warning, TEXT("\"%s\" asks for a \"%s\", which %s will not hold, so it was left as the call it was written as"),

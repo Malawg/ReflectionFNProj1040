@@ -57,7 +57,7 @@ bool FTextureImport::FromCloud(const FString& Path, const FString& FetchPath, UT
 	}
 
 	const TSharedPtr<FJsonObject> Response = Cloud::Export::GetRawBlocking(FetchPath);
-	if (Response == nullptr) {
+	if (!Response.IsValid()) {
 		return false;
 	}
 

@@ -35,5 +35,5 @@ void FRRuntime::Update() {
 		}
 	}
 
-	GReflectionRuntime.bEnableToolbarToggling = GetPlugin(GReflectionInternalName.ToString()) != nullptr;
+	GReflectionRuntime.bEnableToolbarToggling = GetPlugin(GReflectionInternalName.ToString()).IsValid();
 }

@@ -725,7 +725,7 @@ FExpressionInput IMaterialGraph::PopulateExpressionInput(const FJsonObject* Json
 FName IMaterialGraph::GetExpressionName(const FJsonObject* JsonProperties, const FString& OverrideParameterName) {
 	const TSharedPtr<FJsonValue> ExpressionField = JsonProperties->TryGetField(OverrideParameterName);
 
-	if (ExpressionField == nullptr || ExpressionField->IsNull()) {
+	if (!ExpressionField.IsValid() || ExpressionField->IsNull()) {
 		/* Must be from < 4.25 */
 		return StringToName(JsonProperties->GetStringField(TEXT("ExpressionName")));
 	}
