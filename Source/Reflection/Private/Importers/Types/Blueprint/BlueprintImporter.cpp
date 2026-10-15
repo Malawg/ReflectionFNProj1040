@@ -1542,10 +1542,10 @@ int32 IBlueprintImporter::ConstructGraphs() {
 				const FString& Flags = Said.FindRef(Event.Key);
 
 				const TPair<const TCHAR*, EFunctionFlags> Marks[] = {
-					{ TEXT("FUNC_NetMulticast"), FUNC_NetMulticast },
-					{ TEXT("FUNC_NetServer"), FUNC_NetServer },
-					{ TEXT("FUNC_NetClient"), FUNC_NetClient },
-					{ TEXT("FUNC_NetReliable"), FUNC_NetReliable },
+					TPair<const TCHAR*, EFunctionFlags>(TEXT("FUNC_NetMulticast"), FUNC_NetMulticast),
+					TPair<const TCHAR*, EFunctionFlags>(TEXT("FUNC_NetServer"), FUNC_NetServer),
+					TPair<const TCHAR*, EFunctionFlags>(TEXT("FUNC_NetClient"), FUNC_NetClient),
+					TPair<const TCHAR*, EFunctionFlags>(TEXT("FUNC_NetReliable"), FUNC_NetReliable),
 				};
 
 				for (const TPair<const TCHAR*, EFunctionFlags>& Mark : Marks) {
