@@ -337,7 +337,7 @@ bool FAssetUtilities::ConstructAsset(const FString& Path, const FString& RealPat
 
 		const TSharedPtr<FJsonObject> Response = Cloud::Export::GetRawBlocking(Path);
 
-		if (Response == nullptr || Path.IsEmpty()) return true;
+		if (!Response.IsValid() || Path.IsEmpty()) return true;
 
 		if (Response->HasField(TEXT("errored"))) {
 			UE_LOG(LogReflection, Log, TEXT("Error from response \"%s\""), *Path);
@@ -357,7 +357,7 @@ bool FAssetUtilities::ConstructAsset(const FString& Path, const FString& RealPat
 				RootName.Split("/", &RootName, nullptr, ESearchCase::IgnoreCase, ESearchDir::FromStart);
 			}
 
-			if (RootName != "Game" && RootName != "Engine" && GetPlugin(RootName) == nullptr) {
+			if (RootName != "Game" && RootName != "Engine" && !GetPlugin(RootName).IsValid()) {
 				CreatePlugin(RootName);
 			}
 
