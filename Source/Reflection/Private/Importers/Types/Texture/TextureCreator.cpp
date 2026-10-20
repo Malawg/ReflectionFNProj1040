@@ -281,15 +281,6 @@ bool FTextureCreator::CreateRenderTarget2D(UTexture*& OutRenderTarget2D, const T
 
 	bool bAutoGenerateMips = false;
 	if (Properties->TryGetBoolField(TEXT("bAutoGenerateMips"), bAutoGenerateMips)) RenderTarget2D->bAutoGenerateMips = bAutoGenerateMips;
-	/* Render targets only gained a mip sampler filter alongside auto generated mips in 4.23 */
-#if !UE4_22_BELOW
-	if (bAutoGenerateMips) {
-		FString MipsSamplerFilter;
-
-		if (Properties->TryGetStringField(TEXT("MipsSamplerFilter"), MipsSamplerFilter))
-			RenderTarget2D->MipsSamplerFilter = static_cast<TextureFilter>(StaticEnum<TextureFilter>()->GetValueByNameString(MipsSamplerFilter));
-	}
-#endif
 
 	OutRenderTarget2D = RenderTarget2D;
 
