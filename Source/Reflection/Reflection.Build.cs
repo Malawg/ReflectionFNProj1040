@@ -209,6 +209,7 @@ public class Reflection : ModuleRules {
 
 			/* FMeshDescription, which the static mesh importer describes its geometry into */
 			"MeshDescription",
+            "Kismet",
 
 #if UE_4_24_OR_LATER
 			/* FStaticMeshAttributes, which 4.24 split out of MeshDescription */

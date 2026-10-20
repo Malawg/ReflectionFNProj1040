@@ -2,6 +2,7 @@
 
 #include "Importers/Types/Materials/MaterialImporter.h"
 #include "Importers/Types/Materials/MaterialStubs.h"
+#include "UObject/MetaData.h"
 
 /* Include Material.h (depends on UE Version) */
 #if (ENGINE_UE5 && ENGINE_MINOR_VERSION < 3) || ENGINE_UE4

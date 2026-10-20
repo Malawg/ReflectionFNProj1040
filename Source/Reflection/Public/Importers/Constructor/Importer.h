@@ -24,11 +24,7 @@
 #include "Misc/PackageName.h"
 #include "Misc/Paths.h"
 
-/* [4.26] 	4.26 doesn't find the UMetaData header on it's own.
- * 			Let's help it out. */
-#if UE4_26
 #include "UObject/MetaData.h"
-#endif
 
 /* The file a package name lands on, if any. */
 inline bool PackageFileOf(const FString& LongPackageName, FString& OutFilename) {
